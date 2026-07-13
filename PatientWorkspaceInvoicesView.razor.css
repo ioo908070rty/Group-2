@@ -1,0 +1,473 @@
+﻿/* الحاوية الكبرى: تحويل مساحة العمل بالكامل إلى صف مرن متناسق الارتفاع */
+.workspace-split-layout {
+    display: flex;
+    gap: 8px; /* مسافة فاصلة أنيقة بين السايد بار ولوحة البيانات */
+    width: 100%;
+    align-items: stretch; /* إجبار الطرفين على أخذ نفس الارتفاع الرأسي بالملي */
+    box-sizing: border-box;
+}
+
+/* بنل السايد بار الجانبي الأيمن: محكوم بنسبة 25% صلبة ومحمية من الانضغاط أو التوسع */
+/*.workspace-sidebar-pane {
+    flex: 0 0 20%;
+    width: 25%;
+    min-width: 15rem;
+    max-width: 15rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+*/
+.workspace-sidebar-pane {
+    flex-shrink: 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    /* تم إزالة العرض الثابت 25% ليعتمد على عرض المكون الداخلي */
+}
+/* بنل تفاصيل الفاتورة الأيسر: يتمدد تلقائياً ليمر عبر الـ 75% المتبقية من المساحة المتاحة */
+/*.workspace-main-content {
+    flex: 0 0 calc(75% - 16px);*/ /* حساب النسبة بدقة مع خصم مسافة الـ gap */
+    /*flex-grow: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-sizing: border-box;
+}*/
+.workspace-main-content {
+    flex: 1; /* يأخذ المساحة المتبقية بالكامل */
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-sizing: border-box;
+    transition: all 250ms ease-in-out; /* إضافة حركة ناعمة عند تمدد المحتوى */
+}
+.loading-overlay, .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    background: #ffffff;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+}
+
+/* =========================================
+   1. تنسيق تبويبات النظام مدمجة أفقياً مع زر العمليات الحرة
+   ========================================= */
+.invoices-system-tabs-wrapper {
+    width: 100%;
+    margin-bottom: 2px;
+}
+
+.tabs-with-action-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    border-bottom: 2px solid #e2e8f0; /* نقل خط التقسيم للحاوية الكبرى */
+    padding-bottom: 2px;
+}
+
+.tabs-container-grow {
+    flex-grow: 1;
+}
+
+::deep .invoice-system-tabs > .uik-tabs-bar {
+    display: flex;
+    justify-content: flex-start; /* تمركز أزرار التبويبات في منتصف مساحة العرض */
+    border-bottom: none !important; /* إلغاء الخط الافتراضي لمنع تكرار الخطوط عمودياً */
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.btn-open-free-invoice {
+    background-color: #ffffff;
+    border: 1px dashed #0052cc;
+    color: #0052cc;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s ease-in-out;
+    white-space: nowrap;
+    margin-inline-start: 12px;
+}
+
+    .btn-open-free-invoice:hover {
+        background-color: #e0e7ff;
+        border-style: solid;
+    }
+
+.free-invoice-form-panel {
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    height: 65vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 2px 5px;
+    margin-top: 2px;
+    justify-content: space-between;
+}
+
+    ::deep .invoice-system-tabs > .uik-tabs-bar > .uik-tab {
+        margin: 0 4px;
+        padding: 6px 16px; /* تقليص الحشوة الداخلية للتبويب */
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+/* =========================================
+   2. شريط رأس الفاتورة المضغوط بشكل مسطح ونحيف للغاية
+   ========================================= */
+/*.invoice-header-section-compact {
+    background: #ffffff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.header-top-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px dashed #e2e8f0;
+    padding-bottom: 4px;
+}
+
+.invoice-title-block {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.invoice-label-text {
+    font-size: 11px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.invoice-number-text {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.status-badge-compact {
+    background: #fef3c7;
+    color: #d97706;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.payment-badge-compact {
+    background: #dcfce7;
+    color: #16a34a;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.header-details-ribbon {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+}
+
+.ribbon-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+}
+
+    .ribbon-item i {
+        font-size: 11px;
+        padding: 2px 4px;
+        border-radius: 4px;
+    }
+
+.text-primary-icon {
+    color: #0052cc;
+    background: #e0e7ff;
+}
+
+.text-success-icon {
+    color: #16a34a;
+    background: #dcfce7;
+}
+
+.text-purple-icon {
+    color: #9333ea;
+    background: #f3e8ff;
+}
+
+.ribbon-label {
+    color: #64748b;
+    font-weight: 500;
+}
+
+.ribbon-value {
+    color: #1e293b;
+    font-weight: 600;
+}*/
+
+/* =========================================
+   3. رقاقات ملخص المبالغ الماليّة باصغر حجم ممكن على سطر واحد
+   ========================================= */
+/*.invoice-summary-chips-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+}
+
+.summary-chip {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 4px 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;*/ /* التوزيع بالتساوي لتاخذ السطر افقيا بالكامل */
+    /*min-width: 140px;
+}
+
+.border-blue {
+    border-inline-start: 3px solid #0052cc;
+}
+
+.border-green {
+    border-inline-start: 3px solid #16a34a;
+}
+
+.border-purple {
+    border-inline-start: 3px solid #9333ea;
+}
+
+.border-teal {
+    border-inline-start: 3px solid #0d9488;
+}
+
+.border-red {
+    border-inline-start: 3px solid #dc2626;
+}
+
+.chip-label {
+    font-size: 11px;
+    color: #64748b;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.chip-value {
+    font-size: 12px;
+    font-weight: 700;
+    margin-inline-start: auto;*/ /* دفع القيمة المالية لليسار دائما */
+/*}*/
+
+
+
+/* =========================================
+   4. جدول البنود التفصيلي وهو الجزء الاكبر مساحة
+   ========================================= */
+/*.invoice-items-section {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 2px;
+}
+
+.items-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: right;
+}
+
+    .items-table th {
+        background: #f8fafc;
+        padding: 8px 12px;*/ /* تقليص حشوة الاسطر المرجعية لرأس الجدول */
+        /*font-size: 12px;
+        font-weight: 600;
+        color: #475569;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .items-table td {
+        padding: 8px 12px;*/ /* حشوة اسطر بنود الفاتورة صغيرة جدا لتاخذ اكبر كمية بنود بالصفحة */
+        /*border-bottom: 1px solid #f1f5f9;
+        font-size: 12px;
+        color: #1e293b;
+    }
+
+.parent-row td {
+    font-weight: 500;
+}
+
+.child-row td {
+    background-color: #fafafa;
+    color: #475569;
+}
+
+.service-name-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.parent-package {
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.toggle-bundle-btn {
+    background: none;
+    border: none;
+    color: #475569;
+    cursor: pointer;
+    padding: 2px;
+}
+
+.badge-package {
+    background: #f3e8ff;
+    color: #9333ea;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.font-small-icon {
+    font-size: 10px;
+    transform: scaleX(-1);*/ /* تدوير السهم البصري ليتناسب مع الكتابة العربية */
+/*}
+
+.font-weight-bold {
+    font-weight: 700;
+}*/
+
+/* =========================================
+   5. شريط الاجماليات السفلي
+   ========================================= */
+.invoice-footer-totals {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 8px 16px;
+}
+
+.total-items-count {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.totals-grid {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+}
+
+.total-label {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.total-value {
+    font-size: 13px;
+    font-weight: 700;
+    min-width: 80px;
+    text-align: left;
+}
+.text-blue {
+    color: #0052cc;
+}
+
+.text-green {
+    color: #16a34a;
+}
+
+.text-purple {
+    color: #9333ea;
+}
+
+.text-teal {
+    color: #0d9488;
+}
+
+.text-red {
+    color: #dc2626;
+}
+
+.chip-currency {
+    font-size: 10px;
+    color: #94a3b8;
+    font-weight: 500;
+}
+/* =========================================
+   6. أزرار المعالجة النهائية والعمليات
+   ========================================= */
+.invoice-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding-top: 4px;
+}
+
+.btn {
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-cancel {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    color: #64748b;
+}
+
+.btn-save {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    color: #1e293b;
+}
+
+.btn-submit {
+    background: #0052cc;
+    border: 1px solid #0052cc;
+    color: #ffffff;
+}
+
+    .btn-submit:hover {
+        background: #0047b3;
+    }
